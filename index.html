@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chicken Recipes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Responsive grid */
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .recipe {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .recipe:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        h3 {
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        button {
+            margin: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="container"></div>
+    <button onclick="apicall()">Chicken Recipes</button>
+
+    <script>
+        async function apicall() {
+            let data = await fetch("https://www.themealdb.com/api/json/v1/1/filter.php?i=chicken_breast");
+            let result = await data.json();
+            let container = document.getElementById("container");
+
+            // Clear the container before appending new recipes
+            container.innerHTML = "";
+
+            // Iterate through the meals and create the elements
+            result.meals.forEach(val => {
+                let recipeDiv = document.createElement("div");
+                recipeDiv.classList.add("recipe");
+
+                let recipeName = document.createElement("h3");
+                recipeName.innerText = val.strMeal;
+
+                let recipeImage = document.createElement("img");
+                recipeImage.src = val.strMealThumb;
+                recipeImage.alt = val.strMeal;
+
+                // Append the name and image to the recipe div
+                recipeDiv.appendChild(recipeName);
+                recipeDiv.appendChild(recipeImage);
+
+                // Append the recipe div to the container
+                container.appendChild(recipeDiv);
+            });
+        }
+    </script>
+</body>
+</html>
